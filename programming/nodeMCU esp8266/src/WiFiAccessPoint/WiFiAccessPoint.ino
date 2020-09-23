@@ -13,7 +13,11 @@
 const char *ssid = "SecuritySystem"; 
 const char *password = "thereisnospoon";
 
+int waiting = 1000;
 int counter = 0;
+int ledPin = 5;
+
+boolean ledState = true;
 
 ESP8266WebServer server(80);
 
@@ -27,6 +31,9 @@ void handleRoot() {
 void setup() {
   delay(1000);
   Serial.begin(115200);
+
+  pinMode(ledPin, OUTPUT);
+  
   Serial.println();
   Serial.println("Configuring access point...");
   /* You can remove the password parameter if you want the AP to be open. */
@@ -46,9 +53,20 @@ void setup() {
 
 void loop() {
   counter++;
-  Serial.println("running " + String(counter));
-  server.send(200, "text/html", "<h1>You are connected " + String(counter) + "</h1>");
+  ledState = !ledState;
+  
+  Serial.println(String(ledState));
+  if (ledState == true){
+    digitalWrite(ledPin, HIGH);
+  }
+  else if (ledState == false){
+    digitalWrite(ledPin, LOW);
+  }
+  
+  
+  Serial.println("Sending " + "<h1>You are connected " + String(counter) + "<br>" + "Led status" + String(ledState) + "</h1>");
+  server.send(200, "text/html", "<h1>You are connected " + String(counter) + "<br>" + "Led status " + String(ledState) + "</h1>");
   
   server.handleClient();
-  delay(1000);
+  delay(waiting);
 }

@@ -1,7 +1,7 @@
 /**
  * 
  * 
- * *1: the * before the variable is a pointer it sas that
+ *
  */
 
 /* import libraries */
@@ -9,9 +9,11 @@
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 
-/* set ssid and and password (*1) */
-const char *ssid = "ESPap"; 
+/* set ssid and and password */
+const char *ssid = "SecuritySystem"; 
 const char *password = "thereisnospoon";
+
+int counter = 0;
 
 ESP8266WebServer server(80);
 
@@ -43,5 +45,10 @@ void setup() {
 }
 
 void loop() {
+  counter++;
+  Serial.println("running " + String(counter));
+  server.send(200, "text/html", "<h1>You are connected " + String(counter) + "</h1>");
+  
   server.handleClient();
+  delay(1000);
 }

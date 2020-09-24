@@ -13,9 +13,12 @@
 const char *ssid = "SecuritySystem"; 
 const char *password = "thereisnospoon";
 
-int waiting = 1000;
+String htmlPage = "Some html"; //TODO
+
+int waitingTime = 100;
 int counter = 0;
 int ledPin = 5;
+int sensorUpdates = 10; //TODO
 
 boolean ledState = true;
 
@@ -54,19 +57,23 @@ void setup() {
 void loop() {
   counter++;
   ledState = !ledState;
-  
-  Serial.println(String(ledState));
-  if (ledState == true){
-    digitalWrite(ledPin, HIGH);
+
+  if (sensorUpdates == counter){
+    //sensorUpdate
+    counter = 0;
+    
+    Serial.println(String(ledState));
+    if (ledState == true){
+      digitalWrite(ledPin, HIGH);
+    }
+    else if (ledState == false){
+      digitalWrite(ledPin, LOW);
+    }
   }
-  else if (ledState == false){
-    digitalWrite(ledPin, LOW);
-  }
   
-  
-  Serial.println("Sending " + "<h1>You are connected " + String(counter) + "<br>" + "Led status" + String(ledState) + "</h1>");
+  Serial.println("updating server to: " + "<h1>You are connected " + String(counter) + "<br>" + "Led status" + String(ledState) + "</h1>");
   server.send(200, "text/html", "<h1>You are connected " + String(counter) + "<br>" + "Led status " + String(ledState) + "</h1>");
   
   server.handleClient();
-  delay(waiting);
+  delay(waitingTime);
 }

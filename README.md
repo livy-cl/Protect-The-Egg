@@ -8,7 +8,7 @@ Under the esptools directory is the micropython firmware (the .bin file) and the
 We (our group) need to protect an egg by using a laser and sensor my part of the project is programming.
 
 ## Note
-This website has been build upon the Linux file system so this will not work on Linux. I may add something in the future to fix this. If you would want to fix this your self you would need to change all the directory's from a foreword slash (/) to a backwards slash or two I dunno (\ or \\).
+This website has been build upon the Linux file system so this will not work on Windows. I may add something in the future to fix this. If you would want to fix this your self you would need to change all the directory's from a foreword slash (/) to a backwards slash or two I dunno (\ or \\).
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)

@@ -2,7 +2,7 @@
 A stem project for school using an esp8266 with micropython.
 
 ## Flashing
-Under the esptools directory is the micropython firmware (the .bin file) and the esptool file for flashing the firmware on the esp8266 (only tested on Linux).
+Under the [esptools](https://github.com/espressif/esptool) directory is the micropython firmware (the .bin file) and the esptool file for flashing the firmware on the esp8266 (esptool file is only tested on Linux).
 
 ## The project
 We (our group) need to protect an egg by using a laser and sensor my part of the project is programming.

@@ -29,6 +29,8 @@ def main():
     s.listen(5)
 
     while True:
+        # TODO add multi threading
+
         conn, addr = s.accept()
         print('Got a connection from %s' % str(addr))
         request = conn.recv(1024)

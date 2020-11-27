@@ -1,4 +1,10 @@
 def web_page(components):
+    """
+    Makes the web pages
+
+    :param components: a dictionary with all the hardware components in
+    :return: the website html
+    """
     if components["button"]["object"].value() == 1:
         gpio_state = "ON"
     else:

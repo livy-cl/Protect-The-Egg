@@ -1,129 +1,269 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US" style="height: 100%;">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Main Page</title>
-    <meta name="description">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style_menu.css">
-    <link rel="stylesheet" href="jquery.nice-number.css">
-    <link rel="icon" type="image/png" href="arduino-logo-1.png">
+    <title>Security System Controll</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="https://www.iconarchive.com/download/i89094/icons8/ios7/Travel-Museum.ico">
+    <style>
+        html {
+            font-family: Helvetica;
+            display: inline-block;
+            margin: -10px auto;
+            margin-left: -10px;
+            margin-right: -11px;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            color:white;
+            background-color: #62A4F2;
+            padding: 2vh;
+        }
+
+        p {
+            font-size: 24px;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #e7bd3b;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            padding: 16px 40px;
+            text-decoration: none;
+            font-size: 30px;
+            margin: 2px;
+            cursor: pointer;
+        }
+
+        .button2 {
+            background-color: #4286f4;
+        }
+
+        table.widget {
+            background-color: #e6e6e6;
+            text-align: center;
+            margin-right: auto;
+            margin-left: auto;
+            height: auto;
+            width: auto;
+            box-shadow: 10px 10px 10px darkgray;
+            border-radius: 5px;
+        }
+
+        table.title_table {
+            width: 100%;
+        }
+
+        tr.title_cell {
+            background-color: #62A4F2;
+            border-color: #62A4F2;
+        }
+
+        table.main_widget_layout {
+            align-content: center;
+            margin-right: auto;
+            margin-left: auto;
+            padding: 15px;
+        }
+
+        table.vertical_widget_layout {
+            align-content: center;
+            margin-right: auto;
+            margin-left: auto;
+            width: 100%;
+        }
+
+        body {
+            background-color: #f0f0f0;
+        }
+
+        /* The switch - the box around the slider */
+        .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+        }
+
+        /* Hide default HTML checkbox */
+        .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+        }
+
+        /* The slider */
+        .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+        }
+
+        .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        }
+
+        input:checked + .slider {
+        background-color: #2196F3;
+        }
+
+        input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+        border-radius: 34px;
+        }
+
+        .slider.round:before {
+        border-radius: 50%;
+        }
+
+    </style>
 </head>
 
 <body>
-    <div id="progressbar"></div>
-    <div id="scrollPath"></div>
-    <header id="Header">
-        <h1 class="Title">Arduino bestuur groep 4</h1>
-    </header>
-    <div id="boxes">
-        <div class="Box1 box">
-            <div class="uitlegLaser">
-                <p>Deze button zal de laser aan en uit zetten als je er op duwt</p>
-            </div>
-            <div class="laserButton">
-                <button onclick="ChangeText() ">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <div id="myDIV">
-        Laser aan
-    </div>
-    </button>
-            </div>
-        </div>
-        <div class="Box2 box">
-            <div class="uitleg">
-                <p>Aantal graden dat de motor moet draaien</p>
-            </div>
-            <div class="bestuur">
-                <input type="number" value="1" id="SetDegrees" oninput="SendTurnDegrees()">
-            </div>
-            <div class="sendDegrees">
-                <button>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <div id="Degrees">Draai motor 1°</div>
-                    </button>
-            </div>
-
-        </div>
-        <div class="Box3 box">
-            <div id="number">100</div>
-            <input type="range" min="0" max="100" value="100" id="slider">
-        </div>
-
-    </div>
-
-    <div class="footer">
-        <p>&copy; Made by Bram in China</p>
-      </div>
-
-
+    <table class="title_table">
+        <tbody>
+           <tr class="title_cell">
+              <td>
+                 <h1>Museum beveiliging</h1>
+              </td>
+           </tr>
+           <tr>
+              <td>
+                 <table class="main_widget_layout">
+                    <tbody>
+                       <tr>
+                          <td>
+                              <table class="vertical_widget_layout">
+                                  <tbody>
+                                      <tr>
+                                        <td>
+                                            <table class="widget" style="padding-left: 10px; padding-right: 10px;">
+                                               <tbody>
+                                                  <tr>
+                                                     <td><p>Move motor</p></td>
+                                                  </tr>
+                                                  <tr>
+                                                     <td>
+                                                        <table>
+                                                           <tbody>
+                                                              <tr>
+                                                                 <td>
+                                                                    <p><a href="/?led=on"><button class="button">Left</button></a></p>
+                                                                 </td>
+                                                                 <td>
+                                                                    <p><a href="/?led=off"><button class="button button2">right</button></a></p>
+                                                                 </td>
+                                                              </tr>
+                                                           </tbody>
+                                                        </table>
+                                                     </td>
+                                                  </tr>
+                                               </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <p>&nbsp;</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <table class="widget" style="padding-top: 5px; padding-bottom: 5px; padding-right: 30px; padding-left: 30px;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <table>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <p>Laser:&nbsp;</p>
+                                                                        </td>
+                                                                        <td>
+                                                                            <label class="switch">
+                                                                                <input type="checkbox">
+                                                                                <span class="slider round"></span>
+                                                                            </label>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                         </td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                          </td>
+                          <td>
+                              <table style="width: 150px;"><tbody><tr><td><p></p></td></tr></tbody></table>
+                          </td>
+                          <td>
+                            <table class="vertical_widget_layout">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <table class="widget" style="padding-top: 40px; padding-bottom: 40px; padding-right: 30px; padding-left: 30px;">
+                                               <tbody>
+                                                  <tr>
+                                                     <td>
+                                                        <p>Laser status: OFF</p>
+                                                     </td>
+                                                  </tr>
+                                                  <tr>
+                                                     <td>
+                                                        <p>Licht sensor state: 124</p>
+                                                     </td>
+                                                  </tr>
+                                                  <tr>
+                                                     <td>
+                                                        <p>Led state: OFF</p>
+                                                     </td>
+                                                  </tr>
+                                               </tbody>
+                                            </table>
+                                         </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                          </td>
+                       </tr>
+                    </tbody>
+                 </table>
+              </td>
+           </tr>
+        </tbody>
+     </table>
 </body>
-<!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="jquery.nice-number.js"></script>
-<script type="text/javascript">
-    $(function() {
-        $('input[type="number"]').niceNumber();
 
-    });
-</script>
-<script>
-    function SendTurnDegrees() {
-        var SetDegrees = document.getElementById("SetDegrees").value;
-        document.getElementById("Degrees").innerHTML = "Draai motor " + SetDegrees + "°";
-    }
-</script>
-<script>
-    function ChangeText() {
-        var laserState = document.getElementById("myDIV");
-
-        if (laserState.innerHTML === "Laser aan") {
-            laserState.innerHTML = "Laser uit";
-        } else {
-            laserState.innerHTML = "Laser aan";
-        }
-    }
-</script>
-    <!--Scrollbar script-->
-    <script type="text/javascript">
-        let progress = document.getElementById('progressbar');
-        let totalHeigt = document.body.scrollHeight - window.innerHeight;
-        window.onscroll = function() {
-            let progressHeight = (window.pageYOffset / totalHeigt) * 100;
-            progress.style.height = progressHeight + "%";
-        }
-    </script>
-    <script type="text/javascript">
-        const buttons = document.querySelectorAll('a');
-        buttons.forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                let x = e.clientX - e.target.offsetLeft;
-                let y = e.clientY - e.target.offsetTop;
-
-                let ripples = document.createElement('span');
-                ripples.style.left = x + 'px';
-                ripples.style.top = y + 'px';
-                this.appendChild(ripples);
-
-                setTimeout(() => {
-                    ripples.remove()
-                }, 1000);
-            })
-        })
-    </script>
-        <script>
-            var slider = document.getElementById("slider");
-            var number = document.getElementById("number");
-            slider.oninput = function() {
-                number.innerHTML = slider.value;
-            }
-        </script>
 </html>

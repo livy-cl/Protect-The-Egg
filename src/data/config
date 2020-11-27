@@ -1,0 +1,77 @@
+{
+  "index": {
+    "component": ["led", "button"],
+    "nokiaDisplay component": ["nokiaDisplay"]
+  },
+  "components": {
+    "normalSetup": {
+      "led": {
+        "type": "output",
+        "pin": 5,
+        "pinIn": false,
+        "pullUp": false
+      },
+      "button": {
+        "type": "input",
+        "pin": 4,
+        "pinIn": true,
+        "pullUp": false
+      },
+      "laser": {
+        "type": "output",
+        "pin": 0,
+        "pinIn": false,
+        "pullUp": false
+      }
+    },
+    "specialSetup": {
+      "lightSensor": {
+        "type": "lightSensor",
+        "pin": 0
+      },
+      "motor": {
+        "type": "motor",
+        "pin": 2
+      },
+      "OLEDDisplay": {
+        "type": "OLEDDisplay",
+        "SCKPin": 14,
+        "SDAPin": 12,
+        "width": 128,
+        "height": 64
+      }
+    }
+  },
+  "network": {
+    "networkStation": {
+      "enabled": true,
+      "homeNetwork": true,
+      "customSSID": "HH-Secundair-Gasten",
+      "customNetworkPassword": "K9bAtjKB"
+    },
+    "accessPoint": {
+      "enabled": true,
+      "SSID": "Museum Staff",
+      "password": "qwerty123"
+    },
+    "website": {
+      "htmlFiles": [
+        "index.html"
+      ]
+    }
+  },
+  "dumpJson": {
+    "startTime": 0,
+    "repeatMessage": {
+      "laser on light": -1
+    },
+    "display": {
+      "header": "The header",
+      "body": [
+        "first line",
+        "second line",
+        "third line"
+      ]
+    }
+  }
+}

@@ -25,6 +25,10 @@
       }
     },
     "specialSetup": {
+      "speaker": {
+        "type": "speaker",
+        "pin": 13
+      },
       "lightSensor": {
         "type": "lightSensor",
         "pin": 0

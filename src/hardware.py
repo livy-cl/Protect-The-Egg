@@ -40,6 +40,10 @@ def setup_components(component_dict: dict) -> dict:
                                                               final_dict[component_key]["height"],
                                                               final_dict[component_key]["I2C"])
 
+        elif component_value["type"] == "speaker":  # speaker component
+            final_dict[component_key] = component_value
+            final_dict[component_key]["object"] = SpeakerController(final_dict[component_key]["pin"])
+
         else:  # any left over/ net programmed components
             log.warning("Special component " + component_key + " has not been setup")
 
@@ -57,20 +61,63 @@ class DS04NFC:
         self.pwm.duty(75)
 
     def stop(self):
-        # issue stop impulse to stop the motor
+        """
+        issue stop impulse to stop the motor
+        """
         self.pwm.duty(75)
 
     def forward(self, speed: int = 100):
-        # issue forward impulse to start the motor
+        """
+        issue forward impulse to start the motor
+
+        :param speed: the speed of the motor turning
+        """
+
         # map number in range to another range: (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
         speed = int((((speed - 0) * (100 - 75)) / (100 - 0)) + 75)
         self.pwm.duty(speed)
 
     def reverse(self, speed: int = 100):
-        # issue reverse impulse to start the motor
+        """
+        issue reverse impulse to start the motor
+
+        :param speed: the speed of the motor turning
+        """
+
         # map number in range to another range: (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
         speed = int((((speed - 0) * (50 - 75)) / (100 - 0)) + 75)
         self.pwm.duty(speed)
+
+
+class SpeakerController:
+    def __init__(self, pin):
+        """
+        Controller for the speaker
+
+        :param pin: the bin of the low voltage audio amplifier
+        """
+        self.pin = machine.Pin(pin, machine.Pin.OUT)
+        self.pwm = machine.PWM(self.pin)
+        self.pwm.deinit()
+        self.pin.on()
+
+    def alarm(self, freq=500, duty=550):
+        """
+        Makes a pwm. This pwm gives a signal to the audio amplifier who then amplifies the pwm to the speaker
+        :param freq: frequency of the pwm
+        :param duty: the duty of the pwm
+        """
+        self.pwm = machine.PWM(self.pin)
+        self.pwm.init(freq=freq, duty=duty)
+
+    def stop(self):
+        """
+        Stops/deinits the pwm
+        """
+        try:
+            self.pwm.deinit()
+        except:
+            log.debugging("There is no pwm object in speaker controller class")
 
 
 def pulse_pwm(pwm: machine.PWM, time: int):
@@ -95,8 +142,6 @@ def calibrateSensor(components: dict):
     :param components: the dictionary of al the components (that is calculated at hardware.setup_pins())
     """
     from utime import sleep
-    from miscellaneous import time
-    import log
 
     log.message("Start calibrating")
 
@@ -105,12 +150,8 @@ def calibrateSensor(components: dict):
                                                     "sensor. Then",
                                                     "press the button."])
 
-    normal_timer = time() + 120  # make a timer added seconds is the length of the timer
     while True:  # wait for the button to be pressed
         if components["button"]["object"].value() == 1:
-            break
-        if normal_timer > time():
-            normal_timer = True
             break
 
     components["lightSensor"]["normalSensitivity"] = components["lightSensor"]["object"].read()  # save sensor value
@@ -124,13 +165,8 @@ def calibrateSensor(components: dict):
     components["laser"]["object"].on()  # turn laser on
     sleep(3)
 
-    laser_timer = time() + 120  # make a timer added seconds is the length of the timer
     while True:  # wait for the button to be pressed
         if components["button"]["object"].value() == 1:
-            break
-        if normal_timer is True:
-            break
-        if laser_timer > time():
             break
 
     components["lightSensor"]["laserSensitivity"] = components["lightSensor"]["object"].read()  # save sensor value
@@ -139,12 +175,11 @@ def calibrateSensor(components: dict):
     update_display(components)  # clear display
     components["laser"]["object"].off()  # turn laser off
 
-    # calculate middle of normal sensitivity and laser sensitivity
-    components["lightSensor"]["thresholdSensitivity"] = int((components["lightSensor"]["laserSensitivity"] -
+    # calculate middle of normal sensitivity and laser sensitivity then add an offset
+    threshold_sensitivity_offset = 100
+    components["lightSensor"]["thresholdSensitivity"] = int((components["lightSensor"]["laserSensitivity"] +
                                                              components["lightSensor"]["normalSensitivity"]) / 2 +
-                                                            components["lightSensor"]["normalSensitivity"])
-    components["lightSensor"]["thresholdSensitivity"] = int(components["lightSensor"]["thresholdSensitivity"]+
-                                                            components["lightSensor"]["thresholdSensitivity"]/2)
+                                                            threshold_sensitivity_offset)
 
     log.debugging("Threshold sensitivity: " + str(components["lightSensor"]["thresholdSensitivity"]))  # print threshold
     log.message("Calibrating done")
@@ -164,7 +199,6 @@ def update_display(components, header: str = None, body: list = None):
     json_dict = read_json("data/dump")
     if not header == json_dict["display"]["header"] or not body == json_dict["display"]["body"]:  # check if body and/or
         # header has chanced
-        from log import debugging
 
         json_dict["display"]["header"] = header  # add header to json dictionary
         json_dict["display"]["body"] = body  # add body to json dictionary
@@ -183,6 +217,6 @@ def update_display(components, header: str = None, body: list = None):
 
         write_json("data/dump", json_dict)  # write the body and header to the json file named dump
 
-        debugging("Updated display")
+        log.debugging("Updated display")
 
         return True

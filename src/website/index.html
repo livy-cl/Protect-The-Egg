@@ -28,7 +28,6 @@
 
         .button {
             display: inline-block;
-            background-color: #e7bd3b;
             border: none;
             border-radius: 4px;
             color: white;
@@ -39,7 +38,14 @@
             cursor: pointer;
         }
 
-        .button2 {
+        .buttonMotorMoveRight {
+            background-color: #4286f4;
+        }
+
+        .buttonMotorMoveOff{
+            background-color: #e86933;
+        }
+        .buttonMotorMoveLeft{
             background-color: #4286f4;
         }
 
@@ -69,7 +75,7 @@
             margin-left: auto;
             padding: 15px;
         }
-
+        
         table.vertical_widget_layout {
             align-content: center;
             margin-right: auto;
@@ -143,7 +149,7 @@
         .slider.round:before {
         border-radius: 50%;
         }
-
+        
     </style>
 </head>
 
@@ -176,10 +182,13 @@
                                                            <tbody>
                                                               <tr>
                                                                  <td>
-                                                                    <p><a href="/?led=on"><button class="button">Left</button></a></p>
+                                                                    <p><a href="/?moveMoter=1"><button class="button buttonMotorMoveLeft">Left</button></a></p>
                                                                  </td>
+                                                                  <td>
+                                                                      <p><a href="/?moveMoter=0"><button class="button buttonMotorMoveOff">Off</button></a></p>
+                                                                  </td>
                                                                  <td>
-                                                                    <p><a href="/?led=off"><button class="button button2">right</button></a></p>
+                                                                    <p><a href="/?moveMoter=2"><button class="button buttonMotorMoveRight">right</button></a></p>
                                                                  </td>
                                                               </tr>
                                                            </tbody>
@@ -209,7 +218,7 @@
                                                                         </td>
                                                                         <td>
                                                                             <label class="switch">
-                                                                                <input type="checkbox">
+                                                                                <input type="checkbox" onchange="Off()" id="laserChange">
                                                                                 <span class="slider round"></span>
                                                                             </label>
                                                                         </td>
@@ -265,5 +274,20 @@
         </tbody>
      </table>
 </body>
+
+<script type="text/javascript">
+    function On() {
+        var ChangeEvent = document.getElementById("laserChange")
+        window.location.replace("#/Laser=Off");
+        ChangeEvent.setAttribute("onchange", "Off()")
+    }
+
+    function Off() {
+        var ChangeEvent = document.getElementById("laserChange")
+        window.location.replace("#/Laser=On");
+        ChangeEvent.setAttribute("onchange", "On()")
+    }
+
+</script>
 
 </html>

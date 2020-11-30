@@ -22,7 +22,7 @@ def main():
     display_header = ""
     display_body = []
 
-    # hardware.calibrateSensor(components)  # calibrate the sensor
+    hardware.calibrateSensor(components)  # calibrate the sensor
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind(('', 80))
@@ -31,41 +31,55 @@ def main():
     while True:
         # TODO add multi threading
 
+        """
         conn, addr = s.accept()
         print('Got a connection from %s' % str(addr))
         request = conn.recv(1024)
         request = str(request)
         print('Content = %s' % request)
-        led_on = request.find('/?led=on')
-        led_off = request.find('/?led=off')
-        if led_on == 6:
-            print('LED ON')
-        if led_off == 6:
-            print('LED OFF')
+        motor_off = request.find('/?moveMoter=0')
+        motor_left = request.find('/?moveMoter=1')
+        motor_right = request.find('/?moveMoter=2')
+        
+        if motor_off == 6:
+            log.debugging('Turn motor off')
+            components["motor"]["object"].stop()
+        elif motor_left == 6:
+            log.debugging("Move motor left")
+            components["motor"]["object"].forward(50)
+        elif motor_right == 6:
+            log.debugging("Move motor right")
+            components["motor"]["object"].reverse(50)
+            
         response = html
         conn.send('HTTP/1.1 200 OK\n')
         conn.send('Content-Type: text/html\n')
         conn.send('Connection: close\n\n')
         conn.sendall(response)
         conn.close()
-
         """
+
         if components["button"]["object"].value() == 1:  # button pressed
             components["led"]["object"].on()
             components["laser"]["object"].on()
-            components["motor"]["object"].forward(50)
         else:
             components["led"]["object"].off()
             components["laser"]["object"].off()
-            components["motor"]["object"].stop()
 
-        
         if components["lightSensor"]["object"].read() > components["lightSensor"]["thresholdSensitivity"] and \
                 components["button"]["object"].value() == 1:  # laser on sensor and button pressed
             log.repeat_message("Laser on light sensor", 10, "laser on light")
-        """
+            alarm(components)
 
     log.error("Main function stops")
+
+
+def alarm(components):
+    components["led"]["object"].on()
+    components["motor"]["object"].forward(50)
+    components["speaker"]["object"].alarm()
+    from hardware import update_display
+    update_display(components, "De dief is er")
 
 
 if __name__ == '__main__':  # check if python is ready

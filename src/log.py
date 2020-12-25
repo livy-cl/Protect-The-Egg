@@ -21,7 +21,8 @@ def user_input(extra_message: str = ""):
 
 
 def debugging(debug_message: str):
-    print("(" + str(time()) + ") DEBUGGING: " + str(debug_message))
+    if debuggingState:
+        print("(" + str(time()) + ") DEBUGGING: " + str(debug_message))
 
 
 def repeat_message(log_message: str, repeat: int, message_id: str = ""):

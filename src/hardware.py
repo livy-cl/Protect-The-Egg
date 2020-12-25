@@ -144,7 +144,6 @@ def calibrateSensor(components: dict):
     from utime import sleep
 
     log.message("Start calibrating")
-
     update_display(components, "calibrate sensor", ["Do not shine any",  # display text
                                                     "light on the",
                                                     "sensor. Then",

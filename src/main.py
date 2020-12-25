@@ -18,46 +18,28 @@ def main():
     <p>GPIO state: <strong>""" + "gpio_state" + """</strong></p><p><a href="/?led=on"><button class="button">ON</button></a></p>
     <p><a href="/?led=off"><button class="button button2">OFF</button></a></p></body></html>"""
 
+    html = misc.read_file("website/index.html")
+
     components = hardware.setup_components(misc.read_json("data/config")["components"])  # initialize all the components
     display_header = ""
     display_body = []
 
-    hardware.calibrateSensor(components)  # calibrate the sensor
+    #hardware.calibrateSensor(components)  # calibrate the sensor
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(1)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind(('', 80))
     s.listen(5)
 
     while True:
-        # TODO add multi threading
+        try:
+            connection_socket, address = s.accept()
+            print('Got a connection from %s' % str(address))
 
-        """
-        conn, addr = s.accept()
-        print('Got a connection from %s' % str(addr))
-        request = conn.recv(1024)
-        request = str(request)
-        print('Content = %s' % request)
-        motor_off = request.find('/?moveMoter=0')
-        motor_left = request.find('/?moveMoter=1')
-        motor_right = request.find('/?moveMoter=2')
-        
-        if motor_off == 6:
-            log.debugging('Turn motor off')
-            components["motor"]["object"].stop()
-        elif motor_left == 6:
-            log.debugging("Move motor left")
-            components["motor"]["object"].forward(50)
-        elif motor_right == 6:
-            log.debugging("Move motor right")
-            components["motor"]["object"].reverse(50)
-            
-        response = html
-        conn.send('HTTP/1.1 200 OK\n')
-        conn.send('Content-Type: text/html\n')
-        conn.send('Connection: close\n\n')
-        conn.sendall(response)
-        conn.close()
-        """
+            networkManager.network_handler(connection_socket, components)
+        except OSError:
+            log.debugging("Socket timeout")
 
         if components["button"]["object"].value() == 1:  # button pressed
             components["led"]["object"].on()
@@ -66,10 +48,13 @@ def main():
             components["led"]["object"].off()
             components["laser"]["object"].off()
 
-        if components["lightSensor"]["object"].read() > components["lightSensor"]["thresholdSensitivity"] and \
-                components["button"]["object"].value() == 1:  # laser on sensor and button pressed
-            log.repeat_message("Laser on light sensor", 10, "laser on light")
-            alarm(components)
+        try:
+            if components["lightSensor"]["object"].read() > components["lightSensor"]["thresholdSensitivity"] and \
+                    components["button"]["object"].value() == 1:  # laser on sensor and button pressed
+                log.repeat_message("Laser on light sensor", 10, "laser on light")
+                alarm(components)
+        except KeyError:
+            log.warning("ThresholdSensitivity has not been calibrated")
 
     log.error("Main function stops")
 

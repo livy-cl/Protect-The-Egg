@@ -20,9 +20,11 @@ def network_handler(socket, components: dict):
 
     from miscellaneous import read_file
     response = read_file("index.html").split("%%%%%%%")
-    response.insert(3, str(components["led"]["object"].value()))
-    response.insert(2, str(components["lightSensor"]["object"].read()))
-    response.insert(1, str(components["laser"]["object"].value()))
+    response.insert(4, str(components["led"]["object"].value()))
+    response.insert(3, str(components["lightSensor"]["object"].read()))
+    response.insert(2, str(components["laser"]["object"].value()))
+    response.insert(1, "motor speed")
+
     response = ''.join(map(str, response))
     response = response.encode('utf-8')
 

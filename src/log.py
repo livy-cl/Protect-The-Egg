@@ -1,6 +1,11 @@
-from miscellaneous import pretty_time, time
+"""
+The code in the beginning of all the print statements (e.g. '\033[93m' ) is to give it color.
+"""
+
+from miscellaneous import pretty_time
 
 debuggingState = True
+
 
 def warning(warning_message: str):
     print('\033[93m' + "(" + str(pretty_time()) + ") WARNING: " + str(warning_message) + '\033[0m')
@@ -20,7 +25,6 @@ def debugging(debug_message: str):
 
 
 def repeat_message(log_message: str, repeat: int, message_id: str = ""):
-    from miscellaneous import read_json, write_json
     """
     print a message ones every [repeat] seconds and only one every second if you give the parameter
     repeat_message_previous_time
@@ -31,6 +35,7 @@ def repeat_message(log_message: str, repeat: int, message_id: str = ""):
                        (so multiple repeat messages do not print in 1 second)
     :return: whether or not the message printed (printed = True)
     """
+    from miscellaneous import read_json, write_json, time
     json_dict = read_json("data/dump")
 
     if time() % repeat == 0 and not json_dict["repeatMessage"][message_id] == time():  # check if there is a rest when

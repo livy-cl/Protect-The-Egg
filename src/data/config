@@ -42,6 +42,7 @@
       "motor": {
         "type": "motor",
         "pin": 2
+        "speed": 50
       },
       "OLEDDisplay": {
         "type": "OLEDDisplay",

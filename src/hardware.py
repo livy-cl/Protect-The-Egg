@@ -1,5 +1,4 @@
-import machine
-import log
+import machine as machine
 
 
 def setup_components(component_dict: dict) -> dict:
@@ -10,32 +9,33 @@ def setup_components(component_dict: dict) -> dict:
     :return: the dictionary with the components and the object for the components
     """
     from ssd1306 import SSD1306_I2C
+    from machine import Pin, ADC, I2C
     final_dict = {}
 
     # normal setup
     for component_key, component_value in component_dict["normalSetup"].items():  # loop through the normal components
         final_dict[component_key] = component_value  # save component to return dictionary
-        final_dict[component_key]["object"] = machine.Pin(  # make component machine.Pin class
+        final_dict[component_key]["object"] = Pin(  # make component machine.Pin class
             component_value["pin"],  # give pin parameter
-            machine.Pin.IN if component_value["pinIn"] is True else machine.Pin.OUT,  # check if component is output
+            Pin.IN if component_value["pinIn"] is True else Pin.OUT,  # check if component is output
             # or input
-            machine.Pin.PULL_UP if component_value["pullUp"] is True else None)  # check if you need a PULL_UP resistor
+            Pin.PULL_UP if component_value["pullUp"] is True else None)  # check if you need a PULL_UP resistor
 
     for component_key, component_value in component_dict["specialSetup"].items():  # loop through the special components
         if component_value["type"] == "motor":  # motor component
             final_dict[component_key] = component_value  # save component to return dictionary
-            final_dict[component_key]["object"] = DS04NFC(machine.Pin(final_dict[component_key]["pin"],  # motor class
-                                                                      machine.Pin.OUT))
+            final_dict[component_key]["object"] = DS04NFC(Pin(final_dict[component_key]["pin"],  # motor class
+                                                              Pin.OUT))
         elif component_value["type"] == "lightSensor":  # light sensor component
             final_dict[component_key] = component_value  # save component to return dictionary
-            final_dict[component_key]["object"] = machine.ADC(final_dict[component_key]["pin"])  # analog to digital
+            final_dict[component_key]["object"] = ADC(final_dict[component_key]["pin"])  # analog to digital
             # class
 
         elif component_value["type"] == "OLEDDisplay":  # OLED display component
             final_dict[component_key] = component_value  # save component to return dictionary
-            final_dict[component_key]["I2C"] = machine.I2C(-1,  # I2C protocol class
-                                                           scl=machine.Pin(final_dict[component_key]["SCKPin"]),
-                                                           sda=machine.Pin(final_dict[component_key]["SDAPin"]))
+            final_dict[component_key]["I2C"] = I2C(-1,  # I2C protocol class
+                                                   scl=Pin(final_dict[component_key]["SCKPin"]),
+                                                   sda=Pin(final_dict[component_key]["SDAPin"]))
             final_dict[component_key]["object"] = SSD1306_I2C(final_dict[component_key]["width"],  # display class
                                                               final_dict[component_key]["height"],
                                                               final_dict[component_key]["I2C"])
@@ -45,7 +45,8 @@ def setup_components(component_dict: dict) -> dict:
             final_dict[component_key]["object"] = SpeakerController(final_dict[component_key]["pin"])
 
         else:  # any left over/ net programmed components
-            log.warning("Special component " + component_key + " has not been setup")
+            from log import warning
+            warning("Special component " + component_key + " has not been setup")
 
     return final_dict
 
@@ -57,7 +58,8 @@ class DS04NFC:
 
         :param pin: the pin of the DS04-NFC motor
         """
-        self.pwm = machine.PWM(pin, freq=50)
+        from machine import PWM
+        self.pwm = PWM(pin, freq=50)
         self.pwm.duty(75)
 
     def stop(self):
@@ -91,13 +93,14 @@ class DS04NFC:
 
 class SpeakerController:
     def __init__(self, pin):
+        from machine import Pin, PWM
         """
         Controller for the speaker
 
         :param pin: the bin of the low voltage audio amplifier
         """
-        self.pin = machine.Pin(pin, machine.Pin.OUT)
-        self.pwm = machine.PWM(self.pin)
+        self.pin = Pin(pin, Pin.OUT)
+        self.pwm = PWM(self.pin)
         self.pwm.deinit()
         self.pin.on()
 
@@ -107,17 +110,15 @@ class SpeakerController:
         :param freq: frequency of the pwm
         :param duty: the duty of the pwm
         """
-        self.pwm = machine.PWM(self.pin)
+        from machine import PWM
+        self.pwm = PWM(self.pin)
         self.pwm.init(freq=freq, duty=duty)
 
     def stop(self):
         """
-        Stops/deinits the pwm
+        Stops/de-inits the pwm
         """
-        try:
-            self.pwm.deinit()
-        except:
-            log.debugging("There is no pwm object in speaker controller class")
+        self.pwm.deinit()
 
 
 def pulse_pwm(pwm: machine.PWM, time: int):
@@ -142,8 +143,9 @@ def calibrate_sensor(components: dict):
     :param components: the dictionary of al the components (that is calculated at hardware.setup_pins())
     """
     from utime import sleep
+    from log import message, warning, debugging
 
-    log.message("Start calibrating")
+    message("Start calibrating")
     update_display(components, "calibrate sensor", ["Do not shine any",  # display text
                                                     "light on the",
                                                     "sensor. Then",
@@ -153,12 +155,12 @@ def calibrate_sensor(components: dict):
         if components["button"]["object"].value() == 1:
             break
         elif components["configButton"]["object"].value() == 1:
-            log.warning("Stopped calibrating sensor")
+            warning("Stopped calibrating sensor")
             update_display(components)
             return
 
     components["lightSensor"]["normalSensitivity"] = components["lightSensor"]["object"].read()  # save sensor value
-    log.debugging("Normal sensitivity: " + str(components["lightSensor"]["normalSensitivity"]))  # print sensor value
+    debugging("Normal sensitivity: " + str(components["lightSensor"]["normalSensitivity"]))  # print sensor value
 
     update_display(components, "calibrate sensor", ["Shine the laser",  # display text
                                                     "on the sensor.",
@@ -172,12 +174,12 @@ def calibrate_sensor(components: dict):
         if components["button"]["object"].value() == 1:
             break
         elif components["configButton"]["object"].value() == 1:
-            log.warning("Stopped calibrating sensor")
+            warning("Stopped calibrating sensor")
             update_display(components)
             return
 
     components["lightSensor"]["laserSensitivity"] = components["lightSensor"]["object"].read()  # save sensor value
-    log.debugging("Laser sensitivity: " + str(components["lightSensor"]["laserSensitivity"]))  # print sensor value
+    debugging("Laser sensitivity: " + str(components["lightSensor"]["laserSensitivity"]))  # print sensor value
 
     update_display(components)  # clear display
     components["laser"]["object"].off()  # turn laser off
@@ -188,8 +190,8 @@ def calibrate_sensor(components: dict):
                                                              components["lightSensor"]["normalSensitivity"]) / 2 +
                                                             threshold_sensitivity_offset)
 
-    log.debugging("Threshold sensitivity: " + str(components["lightSensor"]["thresholdSensitivity"]))  # print threshold
-    log.message("Calibrating done")
+    debugging("Threshold sensitivity: " + str(components["lightSensor"]["thresholdSensitivity"]))  # print threshold
+    message("Calibrating done")
 
 
 def update_display(components, header: str = None, body: list = None):
@@ -224,6 +226,7 @@ def update_display(components, header: str = None, body: list = None):
 
         write_json("data/dump", json_dict)  # write the body and header to the json file named dump
 
-        log.debugging("Updated display")
+        from log import debugging
+        debugging("Updated display")
 
         return True

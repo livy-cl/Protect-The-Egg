@@ -39,6 +39,7 @@ def connect_to_network():
             from time import time  # import time to make a timer
             start_time = time() + 120  # make timer (last value is how long the timer in ms)
             while not sta_if.isconnected():  # wait to be connected
+                # TODO make cool waiting bar print("[====--------------]")
                 if time() == start_time:  # check if timer is over
                     break
 

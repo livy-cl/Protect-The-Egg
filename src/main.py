@@ -39,6 +39,7 @@ def main():
                 hardware.update_display(components)
                 sleep(3)
         elif components["configButton"]["object"].value() == 1:
+            log.debugging("Robbery state turned off by button")
             robbery_active = False
 
 
@@ -61,7 +62,7 @@ def normal_activity(components):
         if components["lightSensor"]["object"].read() > components["lightSensor"]["thresholdSensitivity"] and \
                 components["button"]["object"].value() == 1:  # laser on sensor and button pressed
             log.repeat_message("Laser on light sensor", 10, "laser on light")
-        else:
+        elif components["button"]["object"].value() == 1:
             log.warning("A robbery has been detected")
             robbery_activity(components)
             return True
@@ -76,6 +77,8 @@ def robbery_activity(components):
     components["led"]["object"].on()
     components["motor"]["object"].forward(motor_speed)
     components["speaker"]["object"].alarm()
+    components["laser"]["object"].off()
+
     from hardware import update_display
     update_display(components, "robbery", ["", "There is", "a robbery."])
 

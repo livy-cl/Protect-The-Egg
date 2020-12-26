@@ -23,6 +23,12 @@
         "pinIn": false,
         "pullUp": false
       }
+      "configButton": {
+        "type": "input",
+        "pin": 15,
+        "pinIn": true,
+        "pullUp": false
+      }
     },
     "specialSetup": {
       "speaker": {

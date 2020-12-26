@@ -2,7 +2,6 @@ from miscellaneous import pretty_time, time
 
 debuggingState = True
 
-
 def warning(warning_message: str):
     print("(" + str(pretty_time()) + ") WARNING: " + str(warning_message))
 

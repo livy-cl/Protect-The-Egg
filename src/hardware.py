@@ -135,7 +135,7 @@ def pulse_pwm(pwm: machine.PWM, time: int):
         sleep_ms(time)
 
 
-def calibrateSensor(components: dict):
+def calibrate_sensor(components: dict):
     """
     gets the sensor state without light and with light then calculates the middle of the 2 values
 
@@ -152,6 +152,10 @@ def calibrateSensor(components: dict):
     while True:  # wait for the button to be pressed
         if components["button"]["object"].value() == 1:
             break
+        elif components["configButton"]["object"].value() == 1:
+            log.warning("Stopped calibrating sensor")
+            update_display(components)
+            return
 
     components["lightSensor"]["normalSensitivity"] = components["lightSensor"]["object"].read()  # save sensor value
     log.debugging("Normal sensitivity: " + str(components["lightSensor"]["normalSensitivity"]))  # print sensor value
@@ -167,6 +171,10 @@ def calibrateSensor(components: dict):
     while True:  # wait for the button to be pressed
         if components["button"]["object"].value() == 1:
             break
+        elif components["configButton"]["object"].value() == 1:
+            log.warning("Stopped calibrating sensor")
+            update_display(components)
+            return
 
     components["lightSensor"]["laserSensitivity"] = components["lightSensor"]["object"].read()  # save sensor value
     log.debugging("Laser sensitivity: " + str(components["lightSensor"]["laserSensitivity"]))  # print sensor value

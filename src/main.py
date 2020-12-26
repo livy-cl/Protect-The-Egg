@@ -13,7 +13,7 @@ def main():
     components = hardware.setup_components(misc.read_json("data/config")["components"])  # initialize all the components
     robbery_active = False
 
-    # hardware.calibrateSensor(components)  # calibrate the sensor
+    hardware.calibrate_sensor(components)  # calibrate the sensor
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.settimeout(1)
@@ -32,6 +32,14 @@ def main():
 
         if not robbery_active:
             robbery_active = normal_activity(components)
+            if components["configButton"]["object"].value() == 1:
+                from utime import sleep
+                sleep(3)
+                hardware.calibrate_sensor(components)
+                hardware.update_display(components)
+                sleep(3)
+        elif components["configButton"]["object"].value() == 1:
+            robbery_active = False
 
 
 def normal_activity(components):
@@ -69,7 +77,7 @@ def robbery_activity(components):
     components["motor"]["object"].forward(motor_speed)
     components["speaker"]["object"].alarm()
     from hardware import update_display
-    update_display(components, "There is a robbery!!")
+    update_display(components, "robbery", ["", "There is", "a robbery."])
 
 
 if __name__ == '__main__':  # check if python is ready

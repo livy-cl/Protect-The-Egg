@@ -1,4 +1,4 @@
-def network_handler(socket, components: dict):
+def network_handler(socket, components: dict, robbery_active: bool):
     from log import debugging, message
     request = socket.recv(1024)
     request = str(request)
@@ -18,15 +18,17 @@ def network_handler(socket, components: dict):
         message("Move motor right")
         components["motor"]["object"].reverse(50)
 
-    from miscellaneous import read_file
-    response = read_file("index.html").split("%%%%%%%")
-    response.insert(4, str(components["led"]["object"].value()))
-    response.insert(3, str(components["lightSensor"]["object"].read()))
-    response.insert(2, str(components["laser"]["object"].value()))
-    response.insert(1, "motor speed")
+    response = "There is a robbery"
+    if not robbery_active:
+        from miscellaneous import read_file
+        response = read_file("index.html").split("%%%%%%%")
+        response.insert(4, str(components["led"]["object"].value()))
+        response.insert(3, str(components["lightSensor"]["object"].read()))
+        response.insert(2, str(components["laser"]["object"].value()))
+        response.insert(1, "motor speed")
 
-    response = ''.join(map(str, response))
-    response = response.encode('utf-8')
+        response = ''.join(map(str, response))
+        response = response.encode('utf-8')
 
     socket.send('HTTP/1.1 200 OK\n'.encode('utf-8'))
     socket.send('Content-Type: text/html\n'.encode('utf-8'))

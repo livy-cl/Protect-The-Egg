@@ -56,6 +56,7 @@ def write_text_file(file_name: str, data: str):
         text_file(str(file_name), str(data))
         text_file.close()
 
+
 def append_text_file(file_name: str, data: str):
     """
     append to a text file (doesn't need to be .txt) this will add the data string to the and of the file
@@ -75,3 +76,17 @@ def time() -> int:
     """
     from utime import mktime, localtime
     return mktime(localtime()) - read_json("data/dump")["startTime"]
+
+
+def pretty_time() -> str:
+    import math
+
+    run_time_seconds = time()
+    seconds = math.fmod(run_time_seconds, 60)
+    minutes = int(run_time_seconds/60)
+    hours = int(minutes/60)
+    minutes = math.fmod(minutes, 60)
+    days = int(hours/60)
+    hours = math.fmod(hours, 60)
+
+    return "days:{days}, hr:{hours}, min:{minutes}, s:{seconds}".format(days=int(days), hours=int(hours), minutes=int(minutes), seconds=int(seconds))

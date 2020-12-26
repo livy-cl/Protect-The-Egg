@@ -1,18 +1,18 @@
-from miscellaneous import time
+from miscellaneous import pretty_time, time
 
 debuggingState = True
 
 
 def warning(warning_message: str):
-    print("(" + str(time()) + ") WARNING: " + str(warning_message))
+    print("(" + str(pretty_time()) + ") WARNING: " + str(warning_message))
 
 
 def error(error_message: str):
-    print("(" + str(time()) + ") ERROR: " + str(error_message))
+    print("(" + str(pretty_time()) + ") ERROR: " + str(error_message))
 
 
 def message(log_message: str):
-    print("(" + str(time()) + ") LOG: " + str(log_message))
+    print("(" + str(pretty_time()) + ") LOG: " + str(log_message))
 
 
 def user_input(extra_message: str = ""):
@@ -22,7 +22,7 @@ def user_input(extra_message: str = ""):
 
 def debugging(debug_message: str):
     if debuggingState:
-        print("(" + str(time()) + ") DEBUGGING: " + str(debug_message))
+        print("(" + str(pretty_time()) + ") DEBUGGING: " + str(debug_message))
 
 
 def repeat_message(log_message: str, repeat: int, message_id: str = ""):
@@ -41,7 +41,7 @@ def repeat_message(log_message: str, repeat: int, message_id: str = ""):
 
     if time() % repeat == 0 and not json_dict["repeatMessage"][message_id] == time():  # check if there is a rest when
         # you divide repeat by time() and if you already send a message of a certain id this second
-        print("(" + str(time()) + ") LOG: " + str(log_message))  # print the message
+        print("(" + str(pretty_time()) + ") LOG: " + str(log_message))  # print the message
         json_dict["repeatMessage"][message_id] = time()  # save time of message to json dictionary for next message/run
 
         write_json("data/dump", json_dict)  # save dictionary to the json file dump

@@ -22,7 +22,7 @@
         "pin": 0,
         "pinIn": false,
         "pullUp": false
-      }
+      },
       "configButton": {
         "type": "input",
         "pin": 15,
@@ -41,7 +41,7 @@
       },
       "motor": {
         "type": "motor",
-        "pin": 2
+        "pin": 2,
         "speed": 50
       },
       "OLEDDisplay": {

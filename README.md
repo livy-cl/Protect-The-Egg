@@ -1,4 +1,3 @@
-#Egg Security with Micropython
 A stem project for my school using an esp8266 with micropython flashed.
 
 ## Flashing

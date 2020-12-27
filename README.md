@@ -9,6 +9,9 @@ Under the [esptools](https://github.com/espressif/esptool) directory you can fin
 ## Compressed and compiled
 In the [compressed folder](https://github.com/janjcool/Egg-Security/tree/master/src-compressed), you will find 3 folders. The first folder [pyFiles](https://github.com/janjcool/Egg-Security/tree/master/src-compressed/pyFiles) I put all the [source files](https://github.com/janjcool/Egg-Security/tree/master/src) and made them as small as possible. In the second folder, [mpyFiles](https://github.com/janjcool/Egg-Security/tree/master/src-compressed/mpyFiles), you can find all compiled files, and the not compiled files [boot.py](https://github.com/janjcool/Egg-Security/blob/master/src-compressed/mpyFiles/boot.py) and [main.py](https://github.com/janjcool/Egg-Security/blob/master/src-compressed/mpyFiles/main.py).  I compiled the files using a tool called [mpy-cross](https://github.com/micropython/micropython/tree/master/mpy-cross). This tool and all its dependencies you can find in the third folder: [mpyFileCompiler](https://github.com/janjcool/Egg-Security/tree/master/src-compressed/mpyFileCompiler).
 
+## Circuit
+![Circuit make with circuit-diagram.org](circuit/circuit.svg)
+
 ## Regrets
 I have 3 main regrets for this project. The first one is using the [esp8266 and not the esp32](https://community.wia.io/d/53-esp8266-vs-esp32-what-s-the-difference), the esp32 has a lot more pins and tools like multi-threading. The second one is that I didn't write very [object-orientated](https://en.wikipedia.org/wiki/Object-oriented_programming) I just saved everything in a dictionary instead of classes. The last regret is not properly planning out this project in advance, which means I needed to throw a lot of work away.
 
